@@ -3,7 +3,7 @@ import { Pressable, Text, View, Image } from "react-native";
 import { LevelCounter } from "./levelCounter";
 import { SuccessFailLevelCounter } from "./successFailLevelCounter"
 import { ScrollView } from "react-native";
-
+import SwipeCounter from "./swipeCounter"
 export default function Index() {
   return (
     <ScrollView
@@ -21,12 +21,12 @@ export default function Index() {
         flexDirection: "row",
         justifyContent: "center",
         width: "100%",
-        gap: 150,
-        right: 15,
+        gap: 165,
+        left: 10,
         top: 60,
       }}>
-        <Text style={{ fontSize: 30 }}>Success</Text>
         <Text style={{ fontSize: 30 }}>Fail</Text>
+        <Text style={{ fontSize: 30 }}>Success</Text>
 
       </View>
       <SuccessFailLevelCounter levelLabel="L4" />
@@ -34,13 +34,13 @@ export default function Index() {
       <SuccessFailLevelCounter levelLabel="L2" />
       <SuccessFailLevelCounter levelLabel="L1" />
       <SuccessFailLevelCounter levelLabel="Net" />
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 50 }}>
-        <Text>Processor</Text>
-        <LevelCounter />
+
+      <View style={{ flexDirection: "row", alignItems: "center", paddingLeft: 240, }}>
+        <SwipeCounter label="Outta reef" />
       </View>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 50 }}>
-        <Text>Reef 🪸</Text>
-        <LevelCounter />
+
+      <View style={{ flexDirection: "row", alignItems: "center", paddingLeft: 240, }}>
+        <SwipeCounter label="processor" />
       </View>
     </ScrollView>
 
