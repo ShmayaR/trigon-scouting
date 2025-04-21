@@ -5,7 +5,7 @@ export function LevelCounter() {
     const [count, setCount] = useState(0);
 
     return (
-        <View
+       <View
             style={{
                 flexDirection: "row",
                 gap: 10,
@@ -20,7 +20,7 @@ export function LevelCounter() {
                     justifyContent: "center",
                     alignItems: "center",
                     borderRadius: 20,
-                })}
+                })} 
             >
                 <Text style={{ fontSize: 50, lineHeight: 50 }}>-</Text>
             </Pressable>

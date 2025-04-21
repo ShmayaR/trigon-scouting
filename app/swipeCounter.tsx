@@ -9,15 +9,23 @@ import {
 } from 'react-native';
 import { addIncrementTap, addDecrementTap } from './haptics';
 
+type SwipeCounterProps = {
+    min?: number;
+    max?: number;
+    label?: string;
+    count: number;
+    setCount: React.Dispatch<React.SetStateAction<number>>;
+};
+
 const CONTAINER_WIDTH = 100;
 
 const SwipeCounter = ({
-    initialValue = 0,
-    min = Number.MIN_SAFE_INTEGER,
+    min = 0,
     max = Number.MAX_SAFE_INTEGER,
     label = 'Count',
-}) => {
-    const [count, setCount] = useState(initialValue);
+    count,
+    setCount,
+}: SwipeCounterProps) => {
     const animatedValue = useRef(new Animated.Value(0)).current;
 
     const rippleAnim = useRef(new Animated.Value(0)).current;
@@ -155,3 +163,4 @@ const styles = StyleSheet.create({
 });
 
 export default SwipeCounter;
+
