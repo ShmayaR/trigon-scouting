@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import {
     View,
     Text,
@@ -7,7 +7,8 @@ import {
     Animated,
     Pressable,
 } from 'react-native';
-import { addIncrementTap, addDecrementTap } from './haptics';
+import { addIncrementTap, addDecrementTap } from './haptics'; // Optional: stub/remove if not using haptics
+const ANIMATION_DURATION = 200; // faster than before
 
 type SwipeCounterProps = {
     min?: number;
@@ -19,15 +20,14 @@ type SwipeCounterProps = {
 
 const CONTAINER_WIDTH = 100;
 
-const SwipeCounter = ({
+const SwipeCounter: React.FC<SwipeCounterProps> = ({
     min = 0,
     max = Number.MAX_SAFE_INTEGER,
     label = 'Count',
     count,
     setCount,
-}: SwipeCounterProps) => {
+}) => {
     const animatedValue = useRef(new Animated.Value(0)).current;
-
     const rippleAnim = useRef(new Animated.Value(0)).current;
 
     const triggerRipple = () => {
@@ -39,17 +39,19 @@ const SwipeCounter = ({
         }).start();
     };
 
-    const animateAndChange = (dir: number, newValue: number) => {
+    const animateFromCenter = (dir: number) => {
+        // Slide old number out
         Animated.timing(animatedValue, {
             toValue: -dir * CONTAINER_WIDTH,
-            duration: 200,
+            duration: ANIMATION_DURATION,
             useNativeDriver: true,
         }).start(() => {
-            setCount(newValue);
+            // Place new number offscreen in opposite direction
             animatedValue.setValue(dir * CONTAINER_WIDTH);
+            // Slide new number into center
             Animated.timing(animatedValue, {
                 toValue: 0,
-                duration: 200,
+                duration: ANIMATION_DURATION,
                 useNativeDriver: true,
             }).start();
         });
@@ -57,35 +59,40 @@ const SwipeCounter = ({
 
     const increment = () => {
         const next = Math.min(count + 1, max);
-        if (next !== count) animateAndChange(1, next);
+        if (next !== count) {
+            addIncrementTap?.();
+            triggerRipple();
+            setCount(next);
+            animateFromCenter(1); // slide left, new number comes from right
+        }
     };
 
     const decrement = () => {
         const next = Math.max(count - 1, min);
-        if (next !== count) animateAndChange(-1, next);
+        if (next !== count) {
+            addDecrementTap?.();
+            triggerRipple();
+            setCount(next);
+            animateFromCenter(-1); // slide right, new number comes from left
+        }
     };
 
-    const handleTapIncrement = () => {
-        addIncrementTap();
-        triggerRipple();
-        increment();
-    };
+
 
     const panResponder = PanResponder.create({
         onMoveShouldSetPanResponder: (_, g) =>
             Math.abs(g.dx) > 10 && Math.abs(g.dy) < 20,
         onPanResponderRelease: (_, g) => {
             if (g.dx > 20) {
-                addDecrementTap();
                 decrement();
             }
         },
     });
 
-    const rippleStyle: any = {
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
+    const rippleStyle = {
+        position: 'absolute' as const,
+        top: CONTAINER_WIDTH / 2,
+        left: CONTAINER_WIDTH / 2,
         width: CONTAINER_WIDTH,
         height: CONTAINER_WIDTH,
         borderRadius: CONTAINER_WIDTH / 2,
@@ -109,7 +116,7 @@ const SwipeCounter = ({
     return (
         <View style={styles.container} {...panResponder.panHandlers}>
             <Text style={styles.label}>{label}</Text>
-            <Pressable onPress={handleTapIncrement} style={styles.counter}>
+            <Pressable onPress={increment} style={styles.counter}>
                 <Animated.View pointerEvents="none" style={rippleStyle} />
                 <View style={styles.hiddenOverflow}>
                     <Animated.View
@@ -163,4 +170,3 @@ const styles = StyleSheet.create({
 });
 
 export default SwipeCounter;
-
