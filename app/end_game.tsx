@@ -1,7 +1,7 @@
 import React, { useState, } from 'react';
 import { View, Text, Pressable, Dimensions } from 'react-native';
 import { Timer } from './timer';
-import { ClimbParkButtons } from './SideNavigator';
+import { ClimbParkButtons } from './sideNavigator';
 
 interface BooleanProps {
   bool: boolean;
