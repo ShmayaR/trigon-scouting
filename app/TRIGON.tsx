@@ -1,18 +1,10 @@
-import React, { useState } from "react";
-import { Pressable, Text, View, Image, Button } from "react-native";
-import { LevelCounter } from "./levelCounter";
-import { SuccessFailLevelCounter } from "./successFailLevelCounter"
-import { ScrollView } from "react-native";
-import SwipeCounter from "./swipeCounter"
-import { PageSwitcher } from "./pageSwitcher";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import React, { useState, } from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CoralAlgaeState } from "./coralAlgaeState"
 import { Teleop } from "./teleop"
-import { Tabs } from "expo-router";
+import { Ionicons } from '@expo/vector-icons';
+import { EndGame } from "./end_game";
 
-const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function App() {
@@ -45,25 +37,62 @@ export default function App() {
     proccessor: useState(0),
     reef: useState(0),
   };
-
-
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: 'red',
+        tabBarInactiveTintColor: 'gray',
+        tabBarStyle: {
+          backgroundColor: '#333',
+        },
+        headerStyle: {
+          backgroundColor: '#555555'
+        },
+        headerTintColor: 'red',
+        headerTitleStyle: {
+          fontSize: 30
+        }
+      }}>
       <Tab.Screen
         name="Auto"
-        options={{ title: 'Auto' }}
+        options={{
+          title: 'Auto',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="logo-python" size={size} color={color} />
+          )
+        }}
       >
         {props => (
           <Teleop teleopState={autoState} isAuto={true} setCrossedLine={setFlag} crossedLine={flag}
           />
         )}
       </Tab.Screen>
+
       <Tab.Screen
-        name="tabs"
-        options={{ title: 'Teleop' }}
+        name="Teleop"
+        options={{
+          title: 'Teleop',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="logo-xbox" size={size} color={color} />
+          )
+        }}
       >
         {props => (
-          <Teleop teleopState={teleopState} isAuto={false}/>
+          <Teleop teleopState={teleopState} isAuto={false} />
+        )}
+      </Tab.Screen>
+
+      <Tab.Screen
+        name="End-game"
+        options={{
+          title: 'End Game',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="logo-apple" size={size} color={color} />
+          )
+        }}
+      >
+        {props => (
+          <EndGame />
         )}
       </Tab.Screen>
 

@@ -1,9 +1,11 @@
-import { Pressable, Text, View, Image } from "react-native";
-import { SuccessFailLevelCounter } from "./successFailLevelCounter"
-import { ScrollView } from "react-native";
-import { CoralAlgaeState } from "./coralAlgaeState"
 import React, { useState } from 'react';
-import SwipeCounter from "./swipeCounter"
+import { Pressable, Text, View, ScrollView, ImageBackground, StyleSheet, Image, ImageBackgroundBase } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
+import { SuccessFailLevelCounter } from "./successFailLevelCounter";
+import { CoralAlgaeState } from "./coralAlgaeState";
+import SwipeCounter from "./swipeCounter";
+import { SuccessFailText } from './successFailText';
+import { CoralCounters } from './coralCounters';
 
 interface TeleopProps {
     teleopState: CoralAlgaeState;
@@ -11,11 +13,13 @@ interface TeleopProps {
     crossedLine?: boolean;
     setCrossedLine?: (v: boolean) => void;
 }
+
 interface AutoButtonsProps {
     flag: boolean;
     setFlag: (v: boolean) => void;
 }
-export function Teleop({ teleopState, isAuto, setCrossedLine: setCrossedLine, crossedLine }: TeleopProps) {
+
+export function Teleop({ teleopState, isAuto, setCrossedLine, crossedLine }: TeleopProps) {
     const {
         l4, faill4,
         l3, faill3,
@@ -24,93 +28,110 @@ export function Teleop({ teleopState, isAuto, setCrossedLine: setCrossedLine, cr
         net, failNet,
         proccessor, reef,
     } = teleopState;
-    const [L4, setL4] = l4;
-    const [failL4, setFailL4] = faill4;
-
-    const [L3, setL3] = l3;
-    const [failL3, setFailL3] = faill3;
-
-    const [L2, setL2] = l2;
-    const [failL2, setFailL2] = faill2;
-
-    const [L1, setL1] = l1;
-    const [failL1, setFailL1] = faill1;
+    const corals = {
+        l4, faill4,
+        l3, faill3,
+        l2, faill2,
+        l1, faill1,
+    }
 
     const [Net, setNet] = net;
     const [FailNet, setFailNet] = failNet;
-
     const [Reef, setReef] = reef;
     const [Proccessor, setProccessor] = proccessor;
 
     return (
-        <View style={{
-            flex: 1,
-            alignContent: "center"
-        }}>
+        <View style={{ flex: 1 }}>
+            <ImageBackground
+                source={require("/Users/shmaya/Desktop/code/trigon-scouting/assets/images/trigon-gray-backround.png")}
+                resizeMode="cover"
+                blurRadius={10}
+                style={{
+                    ...StyleSheet.absoluteFillObject,
+                    zIndex: -1,
+                    opacity: 0.3,
+                }}
+            />
             <ScrollView
                 style={{ flex: 1 }}
                 contentContainerStyle={{
-                    flexDirection: "column",
-                    padding: 20,
-                    paddingBlockEnd: 100,
-                    gap: 0,
-                    alignContent: "center",
-                    alignItems: "center"
-                }}>
+                    flexGrow: 1,
+                }}
+            >
 
-                {isAuto && crossedLine !== undefined && setCrossedLine && (
-                    <AutoButtons
-                        flag={crossedLine}
-                        setFlag={setCrossedLine}
-                    />
-                )}
+                {/* Foreground Content */}
                 <View style={{
                     flexDirection: "column",
+                    alignItems: "center",
                     padding: 20,
-                    paddingBlockEnd: 100,
-                    gap: 80,
-                    alignContent: "center",
-                    alignItems: "center"
-                }}
-                >
-                    <View style={{
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        width: "100%",
-                        gap: 165,
-                        left: 10,
-                        top: 60,
-                    }}>
-                        <Text style={{ fontSize: 30 }}>Fail</Text>
-                        <Text style={{ fontSize: 30 }}>Success</Text>
+                    gap: 0,
+                    paddingTop: 60,
+                    paddingBottom: 100,
+                }}>
+                    {/* Optional Auto Mode Toggle */}
+                    {isAuto && crossedLine !== undefined && setCrossedLine && (
+                        <AutoButtons flag={crossedLine} setFlag={setCrossedLine} />
+                    )}
 
-                    </View>
-                    <SuccessFailLevelCounter
-                        levelLabel="L4" successCount={L4} setSuccessCount={setL4} failCount={failL4} setFailCount={setFailL4} />
-                    <SuccessFailLevelCounter
-                        levelLabel="L3" successCount={L3} setSuccessCount={setL3} failCount={failL3} setFailCount={setFailL3} />
-                    <SuccessFailLevelCounter
-                        levelLabel="L2" successCount={L2} setSuccessCount={setL2} failCount={failL2} setFailCount={setFailL2} />
-                    <SuccessFailLevelCounter
-                        levelLabel="L1" successCount={L1} setSuccessCount={setL1} failCount={failL1} setFailCount={setFailL1} />
-                    <SuccessFailLevelCounter
-                        levelLabel="Net" successCount={Net} setSuccessCount={setNet} failCount={FailNet} setFailCount={setFailNet} />
+                    <CoralCounters coral={corals} />
 
-                    <View style={{ flexDirection: "row", alignItems: "center", paddingLeft: 240, }}>
-                        <SwipeCounter label="Outta reef" count={Reef} setCount={setReef} />
-                    </View>
+                    <View
+                        style={{
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: 80,
+                            paddingBottom: 100,
+                        }}>
+                        <View style={{
+                            paddingTop: 50,
+                            alignItems: "center",
+                            width: "100%",
+                        }}>
 
-                    <View style={{ flexDirection: "row", alignItems: "center", paddingLeft: 240, }}>
-                        <SwipeCounter label="processor" count={Proccessor} setCount={setProccessor} />
+                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", paddingBottom: 20 }}>
+                                <Text style={{ fontSize: 50, }}>Algae</Text>
+                            </View>
+                            {/* Labels */}
+                            <SuccessFailText />
+
+                            <SuccessFailLevelCounter levelLabel="Net" successCount={Net} setSuccessCount={setNet} failCount={FailNet} setFailCount={setFailNet}
+                                centerImage={require('/Users/shmaya/Desktop/code/trigon-scouting/assets/images/net.png')} />
+                        </View>
+
+                        {/* Swipe Counters */}
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingLeft: 135, gap: 20 }}>
+                            <Image
+                                source={require('/Users/shmaya/Desktop/code/trigon-scouting/assets/images/reef.png')}
+                                style={{
+                                    width: 80,
+                                    height: 85,
+                                }}
+                                resizeMode="cover"
+                            />
+                            <SwipeCounter label="Outta reef" count={Reef} setCount={setReef} tintColor={"#d1ecf1"} />
+                        </View>
+
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingLeft: 150, gap: 20 }}>
+                            <Image
+                                source={require('/Users/shmaya/Desktop/code/trigon-scouting/assets/images/proccessor.png')}
+                                style={{
+                                    width: 60,
+                                    height: 80,
+                                }}
+                                resizeMode="cover"
+                            />
+                            <SwipeCounter label="processor" count={Proccessor} setCount={setProccessor} tintColor={"#FFCC80"} />
+                        </View>
                     </View>
                 </View>
             </ScrollView>
         </View>
-    )
+    );
 }
+
 function AutoButtons({ flag, setFlag }: AutoButtonsProps) {
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ marginVertical: 20 }}>
             <Pressable
                 onPress={() => setFlag(!flag)}
                 style={{
@@ -121,7 +142,7 @@ function AutoButtons({ flag, setFlag }: AutoButtonsProps) {
                 }}
             >
                 <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
-                    {flag.toString()}
+                    {"crossed auto line - " + flag.toString()}
                 </Text>
             </Pressable>
         </View>

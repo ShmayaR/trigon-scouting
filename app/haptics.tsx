@@ -1,5 +1,4 @@
 import * as Haptics from 'expo-haptics';
-import ReactNativeHapticFeedback from "react-native";
 
 // optional config object:
 const hapticOptions = {
