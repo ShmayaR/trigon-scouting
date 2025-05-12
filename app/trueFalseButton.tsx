@@ -20,7 +20,7 @@ export function TrueFalseButton({ bool, setBool, trueText, falseText }: BooleanP
                     alignSelf: "center",
                     width: 230
                 }}
-            >/
+            >
                 <Text style={{ color: 'white', fontSize: 22, fontWeight: 'bold', alignSelf: "center" }}>
                     {bool ? trueText : falseText}
                 </Text>
