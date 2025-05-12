@@ -1,46 +1,27 @@
 import React, { useState, } from 'react';
-import { View, Text, Pressable, Dimensions } from 'react-native';
+import { View, } from 'react-native';
 import { Timer } from './timer';
 import { ClimbParkButtons } from './sideNavigator';
-
-interface BooleanProps {
-  bool: boolean;
-  setBool: (v: boolean) => void;
-}
+import { TrueFalseButton } from './trueFalseButton'
 
 export function EndGame() {
   const [flag, setFlag] = useState(false);
   const [park, setPark] = useState(false);
+  const [climb, setClimb] = useState(true);
 
   return (
     <View style={{ flexDirection: "row", flex: 1 }}>
       <ClimbParkButtons bool={flag} setBool={setFlag} />
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {flag ? <ParkButton bool={park} setBool={setPark} /> : <Timer />}
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: "absolute", paddingTop: 120, paddingLeft: 50, }}>
+        {flag ?
+          <View style = {{ flex: 1, justifyContent: 'center',  paddingTop: 120, paddingLeft: 50, }}>
+        <TrueFalseButton bool={park} setBool={setPark} trueText='parked - true' falseText='parked - false' />
       </View>
-      
+      : <><Timer />
+        <TrueFalseButton bool={climb} setBool={setClimb} trueText='climb succesful' falseText='climb failed' /></>}
     </View>
-  )
-}
 
-function ParkButton({ bool, setBool }: BooleanProps) {
-  return (
-    <View style={{ marginVertical: 50, alignContent: "center" }}>
-      <Pressable
-        onPress={() => setBool(!bool)}
-        style={{
-          backgroundColor: bool ? 'green' : 'red',
-          paddingVertical: 22,
-          borderRadius: 6,
-          alignSelf: "center",
-          width: 230
-        }}
-      >
-        <Text style={{ color: 'white', fontSize: 22, fontWeight: 'bold', alignSelf: "center" }}>
-          {"parked - " + bool.toString()}
-        </Text>
-      </Pressable>
-    </View>
-  );
+    </View >
+  )
 }

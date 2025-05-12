@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Pressable, Text, View, ScrollView, ImageBackground, StyleSheet, Image, ImageBackgroundBase } from "react-native";
-import { LinearGradient } from 'expo-linear-gradient';
 import { SuccessFailLevelCounter } from "./successFailLevelCounter";
 import { CoralAlgaeState } from "./coralAlgaeState";
 import SwipeCounter from "./swipeCounter";

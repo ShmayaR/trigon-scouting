@@ -12,7 +12,7 @@ interface BooleanProps {
 
 export function ClimbParkButtons({ bool, setBool }: BooleanProps) {
     return (
-        <View style={{ flexDirection: "column", justifyContent: "flex-start", flex: 1 }}>
+        <View style={{ flexDirection: "column", justifyContent: "flex-start", flex: 1,}}>
             <Pressable
                 onPress={() => setBool(false)}
                 style={{

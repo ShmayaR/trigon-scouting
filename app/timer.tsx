@@ -80,11 +80,12 @@ const styles = StyleSheet.create({
         gap: 20,
     },
     button: {
-        paddingHorizontal: 28,
+        width: 130,
         paddingVertical: 12,
         borderRadius: 6,
         borderWidth: 1,
         marginHorizontal: 10,
+       alignItems:"center"
     },
     buttonText: {
         fontSize: 30,
