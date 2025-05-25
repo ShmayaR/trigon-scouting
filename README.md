@@ -15,7 +15,7 @@ to run the app:
    ```bash
     npx expo start
    ```
-or open the file caontaining the app in your termianl and type:
+or open the file containing the app in your termianl and type:
 "npm start"
 then a qr code will genarate. it will try to open an app called expo go, dowload it and open the app.
 
