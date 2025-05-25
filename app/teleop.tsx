@@ -45,7 +45,7 @@ export function Teleop({ teleopState, isAuto, setCrossedLine, crossedLine }: Tel
             <ImageBackground
                 source={require("/Users/shmaya/Desktop/code/trigon-scouting/assets/images/trigon-gray-backround.png")}
                 resizeMode="cover"
-                blurRadius={18}
+                blurRadius={12}
 
                 style={{
                     ...StyleSheet.absoluteFillObject,

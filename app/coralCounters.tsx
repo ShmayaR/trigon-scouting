@@ -25,13 +25,13 @@ export function CoralCounters({ coral }: coralsProps) {
     return (
         <View>
             <ImageBackground
-                source={require("/Users/shmaya/Desktop/code/trigon-scouting/assets/images/skinnyReef.png")}
+                source={require("/Users/shmaya/Desktop/code/trigon-scouting/assets/images/reef-2.png")}
                 style={{
                     zIndex: -1,
-                    width: 80,
-                    height: 590,
-                    left:150,
-                    top:200,
+                    width: 160,
+                    height: 660,
+                    left:120,
+                    top:160,
                     position:"absolute"
                 }}
             />
