@@ -5,6 +5,7 @@ import { CoralAlgaeState } from "./coralAlgaeState";
 import SwipeCounter from "./swipeCounter";
 import { SuccessFailText } from './successFailText';
 import { CoralCounters } from './coralCounters';
+import * as Haptics from 'expo-haptics';
 
 interface TeleopProps {
     teleopState: CoralAlgaeState;
@@ -44,11 +45,13 @@ export function Teleop({ teleopState, isAuto, setCrossedLine, crossedLine }: Tel
             <ImageBackground
                 source={require("/Users/shmaya/Desktop/code/trigon-scouting/assets/images/trigon-gray-backround.png")}
                 resizeMode="cover"
-                blurRadius={10}
+                blurRadius={18}
+
                 style={{
                     ...StyleSheet.absoluteFillObject,
                     zIndex: -1,
-                    opacity: 0.3,
+                    opacity: 0.7,
+
                 }}
             />
             <ScrollView
@@ -132,7 +135,10 @@ function AutoButtons({ flag, setFlag }: AutoButtonsProps) {
     return (
         <View style={{ marginVertical: 20 }}>
             <Pressable
-                onPress={() => setFlag(!flag)}
+                onPress={() => {
+                    setFlag(!flag)
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                }}
                 style={{
                     backgroundColor: flag ? 'green' : 'red',
                     paddingVertical: 12,

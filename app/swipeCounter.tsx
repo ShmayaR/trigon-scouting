@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   Pressable,
   Animated,
 } from 'react-native';
-import { addIncrementTap, addDecrementTap } from './haptics'; // Optional haptic feedback
+import { addIncrementTap, addDecrementTap } from './haptics';
 
 const ANIMATION_DURATION = 200;
 const CONTAINER_WIDTH = 80;
@@ -29,9 +29,22 @@ const SwipeCounter: React.FC<SwipeCounterProps> = ({
   setCount,
   tintColor,
 }) => {
-  const animatedValue = useRef(new Animated.Value(0)).current;
-  const rippleAnimMain = useRef(new Animated.Value(0)).current;
-  const rippleAnimDecrement = useRef(new Animated.Value(0)).current;
+  // two animated values: one for the old count, one for the new
+  const slideOld = useRef(new Animated.Value(0)).current;
+  const slideNew = useRef(new Animated.Value(0)).current;
+
+  // internal state to drive what's shown in each animated view
+  const [prevCount, setPrevCount] = useState(count);
+  const [displayCount, setDisplayCount] = useState(count);
+
+  // keep internal display in sync if parent count ever changes
+  useEffect(() => {
+    setPrevCount(count);
+    setDisplayCount(count);
+  }, [count]);
+
+  const rippleMain = useRef(new Animated.Value(0)).current;
+  const rippleDec = useRef(new Animated.Value(0)).current;
 
   const triggerRipple = (rippleAnim: Animated.Value) => {
     rippleAnim.setValue(0);
@@ -42,28 +55,39 @@ const SwipeCounter: React.FC<SwipeCounterProps> = ({
     }).start();
   };
 
-  const animateFromCenter = (dir: number) => {
-    Animated.timing(animatedValue, {
-      toValue: -dir * CONTAINER_WIDTH,
-      duration: ANIMATION_DURATION,
-      useNativeDriver: true,
-    }).start(() => {
-      animatedValue.setValue(dir * CONTAINER_WIDTH);
-      Animated.timing(animatedValue, {
+  function doSlide(dir: 1 | -1, next: number) {
+    // 1) capture old, update both parent + display
+    setPrevCount(displayCount);
+    setDisplayCount(next);
+    setCount(next);
+
+    // 2) reset both animations to their start positions
+    slideOld.stopAnimation();
+    slideNew.stopAnimation();
+    slideOld.setValue(0);
+    slideNew.setValue(dir * CONTAINER_WIDTH);
+
+    // 3) run them in parallel
+    Animated.parallel([
+      Animated.timing(slideOld, {
+        toValue: -dir * CONTAINER_WIDTH,
+        duration: ANIMATION_DURATION,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideNew, {
         toValue: 0,
         duration: ANIMATION_DURATION,
         useNativeDriver: true,
-      }).start();
-    });
-  };
+      }),
+    ]).start();
+  }
 
   const increment = () => {
     const next = Math.min(count + 1, max);
     if (next !== count) {
       addIncrementTap?.();
-      triggerRipple(rippleAnimMain);
-      setCount(next);
-      animateFromCenter(1);
+      triggerRipple(rippleMain);
+      doSlide(1, next);
     }
   };
 
@@ -71,34 +95,27 @@ const SwipeCounter: React.FC<SwipeCounterProps> = ({
     const next = Math.max(count - 1, min);
     if (next !== count) {
       addDecrementTap?.();
-      triggerRipple(rippleAnimDecrement);
-      setCount(next);
-      animateFromCenter(-1);
+      triggerRipple(rippleDec);
+      doSlide(-1, next);
     }
   };
 
-  const createRippleStyle = (rippleAnim: Animated.Value, width: number, height: number) => ({
+  const createRippleStyle = (r: Animated.Value, w: number, h: number) => ({
     position: 'absolute' as const,
-    top: height / 2,
-    left: width / 2,
-    width: width,
-    height: height,
-    borderRadius: Math.min(width, height) / 2,
+    top: h / 2,
+    left: w / 2,
+    width: w,
+    height: h,
+    borderRadius: Math.min(w, h) / 2,
     backgroundColor: 'rgba(0,0,0,0.2)',
     transform: [
-      { translateX: -width / 2 },
-      { translateY: -height / 2 },
+      { translateX: -w / 2 },
+      { translateY: -h / 2 },
       {
-        scale: rippleAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 1],
-        }),
+        scale: r.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }),
       },
     ],
-    opacity: rippleAnim.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0.4, 0],
-    }),
+    opacity: r.interpolate({ inputRange: [0, 1], outputRange: [0.4, 0] }),
   });
 
   return (
@@ -116,9 +133,9 @@ const SwipeCounter: React.FC<SwipeCounterProps> = ({
         >
           <Animated.View
             pointerEvents="none"
-            style={createRippleStyle(rippleAnimDecrement, DECREMENT_BUTTON_WIDTH, CONTAINER_WIDTH)}
+            style={createRippleStyle(rippleDec, DECREMENT_BUTTON_WIDTH, CONTAINER_WIDTH)}
           />
-          <Text style={styles.decrementText}>-</Text>
+          <Text style={styles.decrementText}>–</Text>
         </Pressable>
 
         {/* Main Counter */}
@@ -131,16 +148,30 @@ const SwipeCounter: React.FC<SwipeCounterProps> = ({
         >
           <Animated.View
             pointerEvents="none"
-            style={createRippleStyle(rippleAnimMain, CONTAINER_WIDTH, CONTAINER_WIDTH)}
+            style={createRippleStyle(rippleMain, CONTAINER_WIDTH, CONTAINER_WIDTH)}
           />
+
           <View style={styles.hiddenOverflow}>
+            {/* old number */}
             <Animated.View
               style={[
+                StyleSheet.absoluteFillObject,
                 styles.countContainer,
-                { transform: [{ translateX: animatedValue }] },
+                { transform: [{ translateX: slideOld }] },
               ]}
             >
-              <Text style={styles.countText}>{count}</Text>
+              <Text style={styles.countText}>{prevCount}</Text>
+            </Animated.View>
+
+            {/* new number */}
+            <Animated.View
+              style={[
+                StyleSheet.absoluteFillObject,
+                styles.countContainer,
+                { transform: [{ translateX: slideNew }] },
+              ]}
+            >
+              <Text style={styles.countText}>{displayCount}</Text>
             </Animated.View>
           </View>
         </Pressable>
@@ -156,7 +187,7 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 8,
     fontSize: 16,
-    fontWeight:"bold",
+    fontWeight: 'bold',
     color: '#333',
   },
   counterRow: {
@@ -166,7 +197,6 @@ const styles = StyleSheet.create({
   decrementButton: {
     width: DECREMENT_BUTTON_WIDTH,
     height: CONTAINER_WIDTH,
-    backgroundColor: '#ddd',
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
@@ -181,7 +211,6 @@ const styles = StyleSheet.create({
   counter: {
     width: CONTAINER_WIDTH,
     height: CONTAINER_WIDTH,
-    backgroundColor: '#eee',
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
@@ -191,8 +220,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'relative',
   },
   countContainer: {
     width: '100%',

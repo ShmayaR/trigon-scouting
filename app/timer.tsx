@@ -4,9 +4,12 @@ import * as Haptics from 'expo-haptics';
 
 const MAX_TIME = 1500; // in tenths of a second
 
-export function Timer() {
-    // raw elapsed time in _ms_
-    const [elapsedMs, setElapsedMs] = useState(0);
+interface TimerProps {
+    count: number;
+    setCount: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export function Timer({ count, setCount }: TimerProps) {
     // running flag drives both UI and the effect
     const [running, setRunning] = useState(false);
 
@@ -18,7 +21,7 @@ export function Timer() {
     useEffect(() => {
         if (running) {
             // if resuming, backdate startTime so elapsedMs carries over
-            startTimeRef.current = Date.now() - elapsedMs;
+            startTimeRef.current = Date.now() - count;
             rafRef.current = requestAnimationFrame(step);
         } else {
             cancelAnimationFrame(rafRef.current);
@@ -40,7 +43,7 @@ export function Timer() {
             rafRef.current = requestAnimationFrame(step);
         }
 
-        setElapsedMs(delta);
+        setCount(delta);
     };
 
     // toggle start / pause
@@ -60,12 +63,12 @@ export function Timer() {
     const reset = () => {
         cancelAnimationFrame(rafRef.current);
         setRunning(false);
-        setElapsedMs(0);
+        setCount(0);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     };
 
     // format to one decimal place
-    const display = (elapsedMs / 1000).toFixed(1);
+    const display = (count / 1000).toFixed(1);
 
     return (
         <View style={styles.container}>

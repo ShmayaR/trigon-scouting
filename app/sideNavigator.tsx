@@ -16,8 +16,8 @@ export function ClimbParkButtons({ bool, setBool }: BooleanProps) {
             <Pressable
                 onPress={() => setBool(false)}
                 style={{
-                    backgroundColor: bool ? 'white' : 'red',
-                    width: 50,
+                    backgroundColor: bool ? 'white' : 'grey',
+                    width: 40,
                     flex: 1,
                     justifyContent: 'center'
                 }}
@@ -30,8 +30,8 @@ export function ClimbParkButtons({ bool, setBool }: BooleanProps) {
             <Pressable
                 onPress={() => setBool(true)}
                 style={{
-                    backgroundColor: bool ? 'red' : 'white',
-                    width: 50,
+                    backgroundColor: bool ? 'grey' : 'white',
+                    width: 40,
                     flex: 1,
                     justifyContent: 'center'
                 }}
