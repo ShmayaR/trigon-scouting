@@ -25,7 +25,7 @@ export function CoralCounters({ coral }: coralsProps) {
     return (
         <View>
             <ImageBackground
-                source={{ uri: 'https://lh3.googleusercontent.com/pw/AP1GczOegdESMJ3AVyPokCjYYpjBY-o56rPbNAo1LPtZKYTTAY_IpvRakEK7XzdcLNm7JJmnYBHLVM7aOKYBXdvOm69A0dsrRpsYumR-AdDhoUYBbRSijTb_UPF7mpG8yg20lbsk82-bQQ-y-ZGTljn7YZj2h94PUNQ1eKCRaCyVelXDuJVzz930oTX7gIMMLLiEmkH5u4Yp5AA_3XL4LfxTJax_1pZvS_EZ7-im_td8K_6TC8xh9_CmL2VZQNFdYGG-JeXduLsKzL4iuZ392p-b0F-LB745EThBz3VEe2ov4gEgnWo-ZRBNhQMMoXPSIq_1dn9voZonUG7Bee6RjLPI2e1B9cctZTciCSoD5wroUiEB9gTIbuUE3TeNHjgTVQIqtASnnAtJhIB39rpjw_NA857BeKJ8VxhNwUkcDbaPtqzpO0BU7EMT1L0I9UEVT-MSfY03M-thftfernPTsk6Qq45Hf8o6lmnvlkfj0TDYVnxjObyKqojuWTnmrXl_sFGlw_MKK6mecGWbBoW03UpHZDIegC6bqAQPdwE_UVJEXbSyjZKYAjZpUbnzN6uSjkBVyLJpsuccYWw0_Ex-FZKj58f5fE0iGWc_tG2taiChuAJjuaJonfH4-fB0KQI2LW4UTgLN2uO4IDtlAFRkzK33pJ2zQ0hyZ4TPnRAbSO_Lj4cYmu00clTVHOtjWfxokqh0iVHM6ZneW9usl3umV59rM-_-E83uLtZDcwfWzP6h3cdp11if2jMQMFNZ1KE_NhHzghu7vENcePVyYAm-yQmJKmL_UtsqinvruNpSLnCypXPZA5B4h2hJHYwTvjgqc1_GViBwiqkaICLo21ttJzVorqW1bvnF5HZY4o8gvUCALpzBMp1cqQzk-7k7HX2n6sdktnJdqTIg7JlraXe53H2C38ijTV7_XQ=w178-h727-s-no?authuser=0' }}
+                source={{ uri: 'https://drive.google.com/uc?export=view&id=1KoXK12QpA4rsUAkJY3VuFsQg_4CMCQFx' }}
                 style={{
                     zIndex: -1,
                     width: 160,
