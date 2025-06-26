@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { Pressable, Text, View, ScrollView, ImageBackground, StyleSheet, Image, ImageBackgroundBase } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { Pressable, Text, View, ScrollView, ImageBackground, StyleSheet, Image, ImageBackgroundBase, Alert } from "react-native";
 import { SuccessFailLevelCounter } from "./successFailLevelCounter";
 import { CoralAlgaeState } from "./coralAlgaeState";
 import SwipeCounter from "./swipeCounter";
 import { SuccessFailText } from './successFailText';
 import { CoralCounters } from './coralCounters';
 import * as Haptics from 'expo-haptics';
+import { Timer } from './timer';
 
 interface TeleopProps {
     teleopState: CoralAlgaeState;
@@ -39,6 +40,27 @@ export function Teleop({ teleopState, isAuto, setCrossedLine, crossedLine }: Tel
     const [FailNet, setFailNet] = failNet;
     const [Reef, setReef] = reef;
     const [Proccessor, setProccessor] = proccessor;
+    //gives an alert after 15 seconds on the Auto page
+    useEffect(() => {
+        if (crossedLine === true) {
+            const timer = setTimeout(() => {
+                Alert.alert("Auto is over switch to Teleop",
+                    "", // <- optional message
+                    [
+                        { text: "stay", },
+                        {
+                            text: "switch",
+                            onPress: () => {
+                                // Put your logic here
+                            }
+                        }
+                    ]
+                );
+            }, 17000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [crossedLine])
 
     return (
         <View style={{ flex: 1 }}>

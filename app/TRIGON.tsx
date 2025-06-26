@@ -1,11 +1,13 @@
-import React, { useState, } from "react";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { useEffect, useState, } from "react";
+import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CoralAlgaeState } from "./coralAlgaeState"
 import { Teleop } from "./teleop"
 import { Ionicons } from '@expo/vector-icons';
 import { EndGame } from "./end_game";
 
+
 const Tab = createBottomTabNavigator();
+
 
 export default function App() {
   const [flag, setFlag] = useState(false);
@@ -37,6 +39,7 @@ export default function App() {
     proccessor: useState(0),
     reef: useState(0),
   };
+
   return (
     <Tab.Navigator
       screenOptions={{
